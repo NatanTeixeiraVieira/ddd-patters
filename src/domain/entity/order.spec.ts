@@ -40,4 +40,16 @@ describe('Order unit tests', () => {
       const order = new Order('o1', 'c1', [item]);
     }).toThrow(new Error('Item quantity must be greater than zero'));
   });
+
+  it('should add item to order', () => {
+    const item = new OrderItem('1', 'Item 1', 100, 'p1', 2);
+    const item2 = new OrderItem('2', 'Item 2', 200, 'p2', 2);
+
+    const order = new Order('o1', 'c1', [item]);
+
+    order.addItem(item2);
+
+    expect(order.items.length).toBe(2);
+    expect(order.items).toStrictEqual([item, item2]);
+  });
 });
