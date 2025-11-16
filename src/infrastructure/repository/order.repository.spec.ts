@@ -137,4 +137,50 @@ describe('Order repository test', () => {
       total: order.total(),
     });
   });
+
+  it('should find an order by id', async () => {
+    const customerRepository = new CustomerRepository();
+    const customer = new Customer('123', 'Customer 1');
+    const address = new Address('Street 1', 1, 'Zipcode 1', 'City 1');
+    customer.changeAddress(address);
+    await customerRepository.create(customer);
+    const productRepository = new ProductRepository();
+    const product = new Product('123', 'Product 1', 10);
+    await productRepository.create(product);
+
+    const orderItem = new OrderItem(
+      '1',
+      product.name,
+      product.price,
+      product.id,
+      2,
+    );
+
+    const order = new Order('123', '123', [orderItem]);
+
+    const orderRepository = new OrderRepository();
+    await orderRepository.create(order);
+    const orderModel = await OrderModel.findOne({
+      where: { id: '123' },
+      include: ['items'],
+    });
+
+    const foundOrder = await orderRepository.find('123');
+
+    expect(orderModel.toJSON()).toStrictEqual({
+      id: foundOrder.id,
+      customerId: foundOrder.id,
+      total: foundOrder.total(),
+      items: [
+        {
+          id: orderItem.id,
+          name: orderItem.name,
+          price: orderItem.price,
+          quantity: orderItem.quantity,
+          orderId: foundOrder.id,
+          productId: orderItem.productId,
+        },
+      ],
+    });
+  });
 });
