@@ -1,3 +1,7 @@
+import { EventDispatcher } from '../event/@shared/event-dispatcher.ts';
+import { CustomerCreatedEvent } from '../event/customer/customer-created.event.ts';
+import { EnviaConsoleLog1Handler } from '../event/customer/handler/envia-console-log1.handler.ts';
+import { EnviaConsoleLog2Handler } from '../event/customer/handler/envia-console-log2.handler.ts';
 import { Address } from './address.ts';
 
 export class Customer {
@@ -11,6 +15,7 @@ export class Customer {
     this._id = id;
     this._name = name;
     this.validate();
+    this.createCustomerCreatedEvent();
   }
 
   changeName(name: string) {
@@ -69,5 +74,22 @@ export class Customer {
 
   get id(): string {
     return this._id;
+  }
+
+  private createCustomerCreatedEvent() {
+    const eventDispatcher = new EventDispatcher();
+    const enviaConsoleLog1Handler = new EnviaConsoleLog1Handler();
+    const enviaConsoleLog2Handler = new EnviaConsoleLog2Handler();
+
+    eventDispatcher.register('CustomerCreatedEvent', enviaConsoleLog1Handler);
+    eventDispatcher.register('CustomerCreatedEvent', enviaConsoleLog2Handler);
+
+    const customerCreatedEvent = new CustomerCreatedEvent({
+      id: this._id,
+      name: this._name,
+      address: this._address,
+    });
+
+    eventDispatcher.notify(customerCreatedEvent);
   }
 }

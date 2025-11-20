@@ -1,3 +1,6 @@
+import { EnviaConsoleLog1Handler } from '../event/customer/handler/envia-console-log1.handler.ts';
+import { EnviaConsoleLog2Handler } from '../event/customer/handler/envia-console-log2.handler.ts';
+import { ProductCreatedEvent } from '../event/product/product-created.event.ts';
 import { Address } from './address.ts';
 import { Customer } from './customer.ts';
 
@@ -44,5 +47,19 @@ describe('Customer unit tests', () => {
       const customer = new Customer('1', 'Customer 1');
       customer.activate();
     }).toThrow(new Error('Address is mandatory to activate a customer'));
+  });
+
+  it('should send an event when customer is created', () => {
+    const spy1 = jest
+      .spyOn(EnviaConsoleLog1Handler.prototype, 'handle')
+      .mockImplementation(jest.fn());
+    const spy2 = jest
+      .spyOn(EnviaConsoleLog2Handler.prototype, 'handle')
+      .mockImplementation(jest.fn());
+
+    const customer = new Customer('1', 'Customer 1');
+
+    expect(spy1).toHaveBeenCalledTimes(1);
+    expect(spy2).toHaveBeenCalledTimes(1);
   });
 });
