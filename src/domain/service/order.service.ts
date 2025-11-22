@@ -1,6 +1,6 @@
-import { Customer } from './customer.ts';
-import { OrderItem } from './order-item.ts';
-import { Order } from './order.ts';
+import { Customer } from '../entity/customer.ts';
+import { OrderItem } from '../entity/order-item.ts';
+import { Order } from '../entity/order.ts';
 
 export class OrderService {
   static total(orders: Order[]): number {

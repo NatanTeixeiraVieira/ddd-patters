@@ -1,7 +1,7 @@
-import { Customer } from './customer.ts';
-import { OrderItem } from './order-item.ts';
+import { Customer } from '../entity/customer.ts';
+import { OrderItem } from '../entity/order-item.ts';
+import { Order } from '../entity/order.ts';
 import { OrderService } from './order.service.ts';
-import { Order } from './order.ts';
 
 describe('OrderService unit test', () => {
   it('should place an order', () => {
