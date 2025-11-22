@@ -1,6 +1,6 @@
+import { EnviaConsoleLogHandler } from '../event/customer/handler/envia-console-log.handler.ts';
 import { EnviaConsoleLog1Handler } from '../event/customer/handler/envia-console-log1.handler.ts';
 import { EnviaConsoleLog2Handler } from '../event/customer/handler/envia-console-log2.handler.ts';
-import { ProductCreatedEvent } from '../event/product/product-created.event.ts';
 import { Address } from './address.ts';
 import { Customer } from './customer.ts';
 
@@ -22,6 +22,18 @@ describe('Customer unit tests', () => {
     customer.changeName('João');
 
     expect(customer.name).toBe('João');
+  });
+
+  it('should change address', () => {
+    const spy = jest.spyOn(EnviaConsoleLogHandler.prototype, 'handle');
+
+    const customer = new Customer('123', 'Natãn');
+    const address = new Address('Street 1', 123, '12345-678', 'City');
+    customer.changeAddress(address);
+
+    expect(customer.address).toBe(address);
+
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('should activate customer', () => {
@@ -50,12 +62,8 @@ describe('Customer unit tests', () => {
   });
 
   it('should send an event when customer is created', () => {
-    const spy1 = jest
-      .spyOn(EnviaConsoleLog1Handler.prototype, 'handle')
-      .mockImplementation(jest.fn());
-    const spy2 = jest
-      .spyOn(EnviaConsoleLog2Handler.prototype, 'handle')
-      .mockImplementation(jest.fn());
+    const spy1 = jest.spyOn(EnviaConsoleLog1Handler.prototype, 'handle');
+    const spy2 = jest.spyOn(EnviaConsoleLog2Handler.prototype, 'handle');
 
     const customer = new Customer('1', 'Customer 1');
 

@@ -1,5 +1,7 @@
 import { EventDispatcher } from '../event/@shared/event-dispatcher.ts';
+import { CustomerAddressChangedEvent } from '../event/customer/customer-address-changed.event.ts';
 import { CustomerCreatedEvent } from '../event/customer/customer-created.event.ts';
+import { EnviaConsoleLogHandler } from '../event/customer/handler/envia-console-log.handler.ts';
 import { EnviaConsoleLog1Handler } from '../event/customer/handler/envia-console-log1.handler.ts';
 import { EnviaConsoleLog2Handler } from '../event/customer/handler/envia-console-log2.handler.ts';
 import { Address } from './address.ts';
@@ -58,6 +60,20 @@ export class Customer {
 
   changeAddress(address: Address) {
     this._address = address;
+    this.validate();
+
+    const eventDispatcher = new EventDispatcher();
+
+    const enviaConsoleLogHandler = new EnviaConsoleLogHandler();
+
+    const customerAddressChangedEvent = new CustomerAddressChangedEvent(this);
+
+    eventDispatcher.register(
+      'CustomerAddressChangedEvent',
+      enviaConsoleLogHandler,
+    );
+
+    eventDispatcher.notify(customerAddressChangedEvent);
   }
 
   get address(): Address {
